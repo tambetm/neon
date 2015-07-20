@@ -58,10 +58,10 @@ class Matlab(Dataset):
         assert 0 <= self.test_size <= nr_samples
         assert (self.train_size + self.test_size) <= nr_samples
 
-        self.inputs['train'] = inputs[indices[self.test_size:(self.train_size + self.test_size)], ...]
-        self.inputs['test'] = inputs[indices[:self.test_size], ...]
-        self.targets['train'] = targets[indices[self.test_size:(self.train_size + self.test_size)], ...]
-        self.targets['test'] = targets[indices[:self.test_size], ...]
+        self.inputs['train'] = inputs[indices[:self.train_size], ...]
+        self.inputs['test'] = inputs[indices[self.train_size:(self.train_size + self.test_size)], ...]
+        self.targets['train'] = targets[indices[:self.train_size], ...]
+        self.targets['test'] = targets[indices[self.train_size:(self.train_size + self.test_size)], ...]
         logger.info('training set size: %d, test set size: %d', self.inputs['train'].shape[0], self.inputs['test'].shape[0])
         
         # normalize to zero mean and unit variance
