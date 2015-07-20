@@ -19,3 +19,4 @@ from neon.metrics.misclass import (MisclassSum, MisclassRate,  # noqa
 from neon.metrics.roc import AUC  # noqa
 from neon.metrics.loss import LogLossSum, LogLossMean  # noqa
 from neon.metrics.sqerr import SSE, MSE  # noqa
+from neon.metrics.abserr import SAE, MAE
