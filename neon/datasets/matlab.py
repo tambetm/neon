@@ -49,7 +49,7 @@ class Matlab(Dataset):
             assert 0 <= self.test_size <= 1
             self.test_size = int(self.test_size * nr_samples)
 
-        if self.train_size is not None and self.test_size is not None:
+        if self.train_size is None and self.test_size is not None:
             self.train_size = nr_samples - self.test_size
         elif self.test_size is None and self.train_size is not None:
             self.test_size = nr_samples - self.train_size
