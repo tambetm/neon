@@ -57,7 +57,7 @@ def call_neon(params):
     # Initialize the neon experiment
     logging.basicConfig(level=20)
     experiment = deserialize(yaml_file)
-    backend = gen_backend(model=experiment.model)  # , gpu='nervanagpu'
+    backend = gen_backend(model=experiment.model, gpu='nervanagpu')
     experiment.initialize(backend)
 
     # ensure TOP1 error is calculated
@@ -68,8 +68,8 @@ def call_neon(params):
         if item not in experiment.metrics:
             experiment.metrics[item] = [MisclassPercentage(error_rank=1)]
         metriclist = [str(x) for x in experiment.metrics[item]]
-        if 'MisclassPercentage_TOP_1' not in metriclist:
-            experiment.metrics[item].append(MisclassPercentage(error_rank=1))
+        #if 'MisclassPercentage_TOP_1' not in metriclist:
+        #    experiment.metrics[item].append(MisclassPercentage(error_rank=1))
 
     result = experiment.run()
 
@@ -83,7 +83,7 @@ def call_neon(params):
     else:
         raise AttributeError("No error found.")
 
-    return result[hyperopt_set]['MisclassPercentage_TOP_1']
+    return result[hyperopt_set]['MAE']
 
 
 def write_params(input_file, output_file, params):
@@ -103,5 +103,11 @@ def parse_line(line, params):
     Replace the line defining the parameter range by just a name value pair.
     """
     dic = [k.strip("{},") for k in line.split()]
-    out = params[dic[2]][0]
-    return dic[0] + " " + str(out) + ",\n"
+    i = 0
+    while dic[i] != '!hyperopt':
+        i += 1
+    out = params[dic[i + 1]][0]
+    # hack to make 1e-06 acceptable to yaml
+    if "float" in str(type(out)):
+      out = "%e" % out
+    return " ".join(dic[0:i]) + " " + str(out) + ",\n"

@@ -44,17 +44,20 @@ def write_pb(input_file, pb_file):
 def parse_line(line):
     # generate a dictionary ho_dict with fields: [name, type, start, end]
     dic = [k.strip("{},") for k in line.split()]
+    i = 0
+    while dic[i] != '!hyperopt':
+        i += 1
     ho_dict = dict()
-    ho_dict['name'] = dic[2]
-    ho_dict['type'] = dic[3]
+    ho_dict['name'] = dic[i + 1]
+    ho_dict['type'] = dic[i + 2]
     if (ho_dict['type'] == 'FLOAT'):
-        ho_dict['start'] = float(dic[4])
-        ho_dict['end'] = float(dic[5])
+        ho_dict['start'] = float(dic[i + 3])
+        ho_dict['end'] = float(dic[i + 4])
     elif (ho_dict['type'] == 'INT'):
-        ho_dict['start'] = int(dic[4])
-        ho_dict['end'] = int(dic[5])
+        ho_dict['start'] = int(dic[i + 3])
+        ho_dict['end'] = int(dic[i + 4])
     elif (ho_dict['type'] == 'ENUM'):
-        ho_dict['string'] = dic[4]
+        ho_dict['string'] = dic[i + 3]
     else:
         raise AttributeError("Supported types are FLOAT, INT, ENUM")
         # todo: Spearmint supports ENUM but we are not handling it yet.
