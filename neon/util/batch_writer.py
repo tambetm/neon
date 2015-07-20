@@ -135,6 +135,7 @@ class BatchWriter(object):
         self.val_nrec = len(vlines)
         self.train_start = 0
         self.val_start = 10 ** int(np.log10(self.ntrain * 10))
+        self.nclass = {'l_id': len(labels)}
 
     def parse_file_list(self, infile):
         import pandas as pd
@@ -148,7 +149,6 @@ class BatchWriter(object):
         targets = np.array(df[tk].values, np.float32) if len(tk) > 0 else None
         imfiles = df['filename'].values
 
-        self.nclass = {ll: (max(df[ll].values) + 1) for ll in lk}
         return imfiles, labels, targets
 
     def write_batches(self, name, start, labels, imfiles, targets=None,
